@@ -10,17 +10,19 @@ export const App: React.FC = () => {
 
   const applyQuery = useCallback(debounce(setAppliedQuery, 300), []);
 
-  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!query && !e.target.value.trim()) {
       return;
     }
 
     setQuery(e.target.value);
-    applyQuery(e.target.value);
-    setChosenPerson('');
+    if (e.target.value.trim() !== appliedQuery) {
+      applyQuery(e.target.value);
+      setChosenPerson('');
+    }
   };
 
-  const handleOnSelected = (personName: string) => {
+  const onSelected = (personName: string) => {
     setQuery(personName);
     setChosenPerson(personName);
   };
@@ -56,13 +58,9 @@ export const App: React.FC = () => {
               className="input"
               data-cy="search-input"
               value={query}
-              onChange={handleQueryChange}
+              onChange={onQueryChange}
             />
           </div>
-
-          {/* <div className="dropdown-item" data-cy="suggestion-item">
-                <p className="has-text-link">Pieter Haverbeke</p>
-          </div> */}
 
           {!chosenPerson && suggestions.length > 0 && (
             <div
@@ -76,7 +74,7 @@ export const App: React.FC = () => {
                     key={suggestion.slug}
                     className="dropdown-item"
                     data-cy="suggestion-item"
-                    onClick={() => handleOnSelected(suggestion.name)}
+                    onClick={() => onSelected(suggestion.name)}
                   >
                     <p className="has-text-link">{suggestion.name}</p>
                   </div>
