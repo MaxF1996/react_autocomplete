@@ -11,12 +11,16 @@ export const App: React.FC = () => {
   const applyQuery = useCallback(debounce(setAppliedQuery, 300), []);
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!query && !e.target.value.trim()) {
+      return;
+    }
+
     setQuery(e.target.value);
     applyQuery(e.target.value);
     setChosenPerson('');
   };
 
-  const onSelected = (personName: string) => {
+  const handleOnSelected = (personName: string) => {
     setQuery(personName);
     setChosenPerson(personName);
   };
@@ -69,10 +73,10 @@ export const App: React.FC = () => {
               <div className="dropdown-content">
                 {suggestions.map(suggestion => (
                   <div
-                    key={suggestion.name}
+                    key={suggestion.slug}
                     className="dropdown-item"
                     data-cy="suggestion-item"
-                    onClick={() => onSelected(suggestion.name)}
+                    onClick={() => handleOnSelected(suggestion.name)}
                   >
                     <p className="has-text-link">{suggestion.name}</p>
                   </div>
